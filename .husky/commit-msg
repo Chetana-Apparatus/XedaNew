@@ -1,0 +1,14 @@
+#!/bin/sh
+
+commit_msg=$(cat "$1")
+
+# Regex: type(scope): message
+pattern="^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,100}$"
+
+if ! echo "$commit_msg" | grep -Eq "$pattern"; then
+  echo "❌ Invalid commit message format"
+  echo ""
+  echo "Format: type(scope): message"
+  echo "Example: feat(auth): add login API"
+  exit 1
+fi
