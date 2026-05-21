@@ -165,7 +165,7 @@ docker run -d --name nextjs-starter -p 3000:3000 --env-file .env nextjs-starter:
 
 The container includes a health check against:
 
-- `http://localhost:3000/api/health`
+- `http://localhost:6014/api/health`
 
 ## Jenkins Pipeline Overview
 
