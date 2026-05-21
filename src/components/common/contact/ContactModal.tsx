@@ -128,7 +128,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         </button>
 
         <div className="mb-6 pr-8 text-center">
-          <h2 className=" font-semibold text-background ">Subscribe</h2>
+          <h2 className=" font-semibold text-background ">Enquiry Now</h2>
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
