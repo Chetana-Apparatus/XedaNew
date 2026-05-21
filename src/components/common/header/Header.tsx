@@ -8,52 +8,7 @@ import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { useContactModal } from "@/contexts/ContactModalContext";
-
-type NavItem = {
-  label: string;
-  href: string;
-  isActive: (pathname: string, hash: string) => boolean;
-};
-
-const navItems: NavItem[] = [
-  {
-    label: "Home",
-    href: "/#home",
-    isActive: (pathname, hash) =>
-      pathname === "/" && (hash === "" || hash === "#home"),
-  },
-  {
-    label: "Green Blood",
-    href: "/#greenblood",
-    isActive: (pathname, hash) =>
-      (pathname === "/" && hash === "#greenblood") ||
-      pathname === "/green-blood",
-  },
-  {
-    label: "Benifits",
-    href: "/#benefits",
-    isActive: (pathname, hash) =>
-      (pathname === "/" && hash === "#benefits") || pathname === "/benefits",
-  },
-  {
-    label: "About",
-    href: "/#about",
-    isActive: (pathname, hash) => pathname === "/" && hash === "#about",
-  },
-  {
-    label: "Testimonials",
-    href: "/#testimonials",
-    isActive: (pathname, hash) => pathname === "/" && hash === "#testimonials",
-  },
-  {
-    label: "Blog",
-    href: "/blogs",
-    isActive: (pathname, hash) =>
-      pathname === "/blogs" ||
-      pathname.startsWith("/blogs/") ||
-      (pathname === "/" && hash === "#blog"),
-  },
-];
+import { navItems } from "@/data/navigation";
 
 export default function Header() {
   const pathname = usePathname();
@@ -61,6 +16,11 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const { openContactModal } = useContactModal();
+
+  const handleOpenContact = () => {
+    setMobileMenu(false);
+    openContactModal();
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: sync hash when pathname changes
   useEffect(() => {
@@ -95,34 +55,20 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /** White page background — white header bar + dark nav text. */
+  /** White header bar + dark nav from page load (not scroll). */
   const lightTopPage =
-    pathname.startsWith("/blogs") || pathname === "/green-blood";
+    pathname.startsWith("/blogs") ||
+    pathname === "/green-blood" ||
+    pathname === "/benefits" ||
+    pathname === "/the-science-behind-fresh-wheatgrass";
 
-  /** Secondary page background — match header to teal, light nav text. */
-  const secondaryTopPage = pathname === "/benefits" || pathname === "/know";
+  const showWhiteHeaderBar = mobileMenu || lightTopPage || isScrolled;
 
-  const showWhiteHeaderBar =
-    mobileMenu || lightTopPage || (!secondaryTopPage && isScrolled);
+  const headerBgClass = showWhiteHeaderBar ? "bg-background" : "bg-transparent";
 
-  const headerBgClass = mobileMenu
-    ? "bg-background"
-    : pathname === "/benefits"
-      ? "bg-secondary"
-      : pathname === "/know"
-        ? isScrolled
-          ? "bg-secondary"
-          : "bg-transparent"
-        : showWhiteHeaderBar
-          ? "bg-background"
-          : "bg-transparent";
+  const whiteHeaderBar = showWhiteHeaderBar;
 
-  const whiteHeaderBar =
-    mobileMenu || lightTopPage || (pathname === "/" && isScrolled);
-
-  /** Links: dark teal on white bar; light text on transparent or secondary bar. */
-  const navOnLightBar =
-    mobileMenu || lightTopPage || (pathname === "/" && isScrolled);
+  const navOnLightBar = showWhiteHeaderBar;
 
   const linkBase = (navActive: boolean) => {
     if (navOnLightBar) {
@@ -143,99 +89,98 @@ export default function Header() {
           : "shadow-none"
       }`}
     >
-      <div className="pointer-events-auto mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8 lg:px-12">
-        <Link href="/" className="relative z-50">
-          <Image
-            src={navOnLightBar ? "/images/xedab.webp" : "/images/xeda.webp"}
-            alt="Xeda Logo"
-            width={300}
-            height={100}
-            priority
-            className="h-auto w-[140px] object-contain md:w-[170px]"
-          />
-        </Link>
-        <nav className="hidden items-center gap-8 xl:flex">
-          {navItems.map((item) => {
-            const navActive = item.isActive(pathname, hash);
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={bumpHashAfterNav}
-                className={`text-base text-xxl font-medium transition-all duration-300 ${linkBase(
-                  navActive,
-                )}`}
-                aria-current={navActive ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+      {/* All interactive header UI in one pointer-events-auto block (drawer was outside before) */}
+      <div className="pointer-events-auto mx-auto w-full max-w-7xl px-4 md:px-8 lg:px-12">
+        <div className="flex items-center justify-between py-4">
+          <Link href="/" className="relative z-50">
+            <Image
+              src={navOnLightBar ? "/images/xedab.webp" : "/images/xeda.webp"}
+              alt="Xeda Logo"
+              width={300}
+              height={100}
+              priority
+              className="h-auto w-[140px] object-contain md:w-[170px]"
+            />
+          </Link>
+          <nav className="hidden items-center gap-8 xl:flex">
+            {navItems.map((item) => {
+              const navActive = item.isActive(pathname, hash);
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={bumpHashAfterNav}
+                  className={`text-base text-xxl font-bold transition-all duration-300 ${linkBase(
+                    navActive,
+                  )}`}
+                  aria-current={navActive ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Contact Us only on xl+; .btn uses display:flex and can override `hidden` on the same node */}
-        <div className="hidden shrink-0 xl:block">
-          <Button
-            onClick={openContactModal}
-            theme={navOnLightBar ? "foreground" : "light"}
-            className="!px-8 !py-4 text-sm font-semibold"
+          <div className="hidden shrink-0 xl:block">
+            <Button
+              onClick={openContactModal}
+              theme={navOnLightBar ? "foreground" : "light"}
+            >
+              Contact Us
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            aria-label={mobileMenu ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenu}
+            onClick={() => setMobileMenu(!mobileMenu)}
+            className={`shrink-0 xl:hidden ${
+              navOnLightBar ? "text-secondary" : "text-background"
+            }`}
           >
-            Contact Us
-          </Button>
+            {mobileMenu ? <X size={32} /> : <Menu size={32} />}
+          </button>
         </div>
-        <button
-          type="button"
-          aria-label={mobileMenu ? "Close menu" : "Open menu"}
-          aria-expanded={mobileMenu}
-          onClick={() => setMobileMenu(!mobileMenu)}
-          className={`relative z-50 xl:hidden ${
-            navOnLightBar ? "text-secondary" : "text-background"
+
+        <div
+          className={`overflow-hidden bg-background transition-all duration-500 xl:hidden ${
+            mobileMenu
+              ? "max-h-[min(600px,calc(100dvh-5rem))] overflow-y-auto opacity-100"
+              : "max-h-0 opacity-0"
           }`}
         >
-          {mobileMenu ? <X size={32} /> : <Menu size={32} />}
-        </button>
-      </div>
+          <div className="flex flex-col gap-8 px-2 pb-8 pt-2">
+            {navItems.map((item) => {
+              const navActive = item.isActive(pathname, hash);
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`text-xl font-medium ${
+                    navActive
+                      ? "text-foreground underline decoration-2 underline-offset-8"
+                      : "text-[var(--secondary)]"
+                  }`}
+                  aria-current={navActive ? "page" : undefined}
+                  onClick={() => {
+                    bumpHashAfterNav();
+                    setMobileMenu(false);
+                  }}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
 
-      <div
-        className={`pointer-events-none bg-background transition-all duration-500 xl:hidden ${
-          mobileMenu
-            ? "pointer-events-auto max-h-[600px] opacity-100"
-            : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="flex flex-col gap-8 px-6 py-8">
-          {navItems.map((item) => {
-            const navActive = item.isActive(pathname, hash);
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`text-xl font-medium ${
-                  navActive
-                    ? "text-foreground underline decoration-2 underline-offset-8"
-                    : "text-[var(--secondary)]"
-                }`}
-                aria-current={navActive ? "page" : undefined}
-                onClick={() => {
-                  bumpHashAfterNav();
-                  setMobileMenu(false);
-                }}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-
-          <Button
-            onClick={() => {
-              setMobileMenu(false);
-              openContactModal();
-            }}
-            theme="foreground"
-            className="mt-4 !px-7 !py-3 text-base font-semibold"
-          >
-            Contact Us
-          </Button>
+            <Button
+              onClick={handleOpenContact}
+              theme="foreground"
+              className="mt-4"
+            >
+              Contact Us
+            </Button>
+          </div>
         </div>
       </div>
     </header>

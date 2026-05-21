@@ -34,33 +34,29 @@ const stats = [
   },
 ];
 
+const marqueeStats = [...stats, ...stats, ...stats];
+
 function StatStar({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={cn("h-4 w-4 shrink-0 md:h-5 md:w-5", className)}
-      role="presentation"
-    >
-      <path
-        fill="currentColor"
-        d="M12 2.5 14.1 9H21l-5.6 4.1 2.1 6.9L12 16.2 6.4 20l2.1-6.9L3 9h6.9L12 2.5z"
-      />
-    </svg>
+    <Image
+      src="/images/Xedas.svg" // add your svg inside public/images
+      alt="Xeda"
+      width={30}
+      height={30}
+      className={cn("h-12 w-12 shrink-0", className)}
+    />
   );
 }
-
 function StatBlock({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-base md:text-lg">
       <span className="font-medium tracking-tight text-foreground">
         {value}
       </span>
-      <span className="text-background/80" aria-hidden>
+      <span className="text-primary" aria-hidden>
         /
       </span>
-      <span className="font-normal lowercase tracking-wide text-background">
-        {label}
-      </span>
+      <span className="font-normal tracking-wide text-primary">{label}</span>
     </div>
   );
 }
@@ -75,7 +71,7 @@ function StatMarqueeSegment({
   return (
     <div className="flex shrink-0 items-center">
       <div
-        className="flex shrink-0 items-center justify-center px-10 md:px-14"
+        className="flex shrink-0 items-center justify-center px-6 md:px-8"
         aria-hidden
       >
         <StatStar className="text-foreground" />
@@ -89,7 +85,7 @@ export default function XedaNutritionSection() {
   return (
     <section
       id="farm"
-      className="relative overflow-hidden bg-background py-20 md:py-28"
+      className="relative overflow-hidden bg-background pt-12 pb-0 md:pt-20"
     >
       <div className="pointer-events-none absolute inset-0 opacity-[0.08]">
         <div
@@ -101,21 +97,19 @@ export default function XedaNutritionSection() {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-8 lg:px-12">
-        <div className="grid w-full grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-20">
+        <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
           {/* left content */}
           <div className="order-2 max-w-2xl lg:order-1">
-            <span className="inline-flex items-center gap-2 text-xl font-medium uppercase tracking-[0.2em]  md:normal-case md:tracking-normal md:text-foreground">
-              <span>•</span>
-              What’s Inside
-              <span>•</span>
-            </span>
-
-            <h2 className="mt-6 max-w-3xl font-semibold leading-[1.05] tracking-tight text-secondary">
-              Xeda Farm Wheatgrass is packed with essential nutrients your body
-              needs daily.
+            <h2 className="inline-flex items-center gap-2   tracking-[0.2em]  md:normal-case md:tracking-normal text-primary">
+              What’s Inside ?
             </h2>
 
-            <p className="mt-6 max-w-xl leading-relaxed text-secondary">
+            <p className="mt-4 max-w-3xl  leading-[1.05] tracking-tight text-olive">
+              XEDA SHOT WheatGrass is Packed with Essential Nutrients Your Body
+              Needs Daily.
+            </p>
+
+            <p className="mt-4 max-w-xl leading-relaxed text-secondary">
               Every fresh wheatgrass shot delivers a concentrated blend of
               vitamins, minerals, amino acids, enzymes, and chlorophyll designed
               to naturally support energy, recovery, immunity, and overall
@@ -125,8 +119,8 @@ export default function XedaNutritionSection() {
             <Button
               text="Explore Nutrition"
               theme="foreground"
-              href="/nutrition"
-              className="mt-10 !rounded-full !px-8 !py-4 text-sm font-semibold tracking-wide"
+              href="/benefits"
+              className="mt-8"
             />
           </div>
 
@@ -135,7 +129,7 @@ export default function XedaNutritionSection() {
             <div className="relative h-[320px] overflow-hidden">
               <div className="relative h-full w-full">
                 <Image
-                  src="/images/Shot.jpg"
+                  src="/images/roots.webp"
                   alt="Fresh Wheatgrass"
                   fill
                   className="object-cover"
@@ -144,25 +138,28 @@ export default function XedaNutritionSection() {
               </div>
             </div>
 
-            <CardContent className="space-y-6 p-8 md:p-10">
-              <p className="max-w-md  font-medium leading-[1.2] tracking-tight text-secondary">
-                Naturally rich in enzymes, amino acids, vitamins, and minerals
-                that help fuel your body daily.
+            <CardContent className="p-8 text-left md:p-10">
+              <p className="w-full font-medium leading-[1.2] tracking-tight text-secondary">
+                <span className="font-bold">High Potency</span> and Naturally
+                rich in enzymes, amino acids, vitamins, and minerals that help
+                fuel your body daily.
               </p>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <div className="relative z-10 mt-20 flex w-full items-center justify-center overflow-hidden bg-secondary py-6 md:mt-24 md:py-8">
+      <div className="relative z-10 mt-8 w-full border-t border-border/30 py-3 md:mt-10 md:py-4">
         <Marquee speed={40} gradient={false} pauseOnHover autoFill>
-          {stats.map((item) => (
-            <StatMarqueeSegment
-              key={item.label}
-              value={item.value}
-              label={item.label}
-            />
-          ))}
+          <div className="flex items-center">
+            {marqueeStats.map((item, index) => (
+              <StatMarqueeSegment
+                key={`${item.label}-${index}`}
+                value={item.value}
+                label={item.label}
+              />
+            ))}
+          </div>
         </Marquee>
       </div>
     </section>

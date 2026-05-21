@@ -33,8 +33,8 @@ export default function Benefits({ variant = "home" }: { variant?: Variant }) {
     <section
       id="benefits"
       className={cn(
-        "relative scroll-mt-24 bg-secondary py-14 md:scroll-mt-28 md:py-20 lg:py-24",
-        variant === "full" && " mt-5 pt-32 md:pt-36",
+        "benefits-section-gradient relative scroll-mt-24 border-0 py-10 md:scroll-mt-28 md:py-14 lg:py-16",
+        variant === "full" && "mt-5 pt-32 md:pt-36",
       )}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.055]" />
@@ -42,37 +42,19 @@ export default function Benefits({ variant = "home" }: { variant?: Variant }) {
       <div className="relative mx-auto w-full max-w-7xl px-4 md:px-8 lg:px-12">
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xl font-medium leading-relaxed tracking-[0.2em] text-foreground md:normal-case md:tracking-normal">
-            <span aria-hidden className="shrink-0">
-              •
-            </span>
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1  font-medium leading-relaxed tracking-[0.2em] text-black md:normal-case md:tracking-normal"></p>
 
-            <span className="shrink-0">
-              {variant === "full" ? "All benefits" : "Benefits"}
-            </span>
-
-            <span aria-hidden className="shrink-0">
-              •
-            </span>
-          </p>
-
-          <h2 className="mt-4 font-semibold leading-[1.05] tracking-tight text-background md:mt-5">
-            what you need to know
+          <h2 className="mt-0 leading-[1.05] tracking-tight text-background md:mt-6">
+            What You Need To Know ?
           </h2>
-
-          <p className="mt-3 leading-relaxed text-background md:mt-4 md:leading-relaxed">
-            Click a question to expand the answer. Refresh the page to discover
-            different benefit cards.
-          </p>
         </div>
 
         {/* Desktop */}
-        <div className="mt-9 hidden gap-3 md:mt-11 md:grid md:grid-cols-2 md:gap-4 lg:mt-12 lg:gap-5">
+        <div className="mt-6 hidden gap-3 md:mt-8 md:grid md:grid-cols-2 md:gap-3 lg:mt-10 lg:gap-4">
           <div className="flex min-w-0 flex-col gap-2.5 md:gap-3 lg:gap-3.5">
-            {leftColumn.map((item, i) => (
+            {leftColumn.map((item) => (
               <BenefitCard
                 key={item.slug}
-                index={i}
                 title={item.question}
                 description={item.answer}
                 evidence={item.evidence}
@@ -82,10 +64,9 @@ export default function Benefits({ variant = "home" }: { variant?: Variant }) {
           </div>
 
           <div className="flex min-w-0 flex-col gap-2.5 md:gap-3 lg:gap-3.5">
-            {rightColumn.map((item, j) => (
+            {rightColumn.map((item) => (
               <BenefitCard
                 key={item.slug}
-                index={j}
                 title={item.question}
                 description={item.answer}
                 evidence={item.evidence}
@@ -96,11 +77,10 @@ export default function Benefits({ variant = "home" }: { variant?: Variant }) {
         </div>
 
         {/* Mobile */}
-        <div className="mt-9 flex flex-col gap-2.5 md:hidden">
-          {list.map((item, i) => (
+        <div className="mt-6 flex flex-col gap-2.5 md:hidden">
+          {list.map((item) => (
             <BenefitCard
               key={item.slug}
-              index={i}
               title={item.question}
               description={item.answer}
               evidence={item.evidence}
@@ -111,12 +91,8 @@ export default function Benefits({ variant = "home" }: { variant?: Variant }) {
 
         {/* Button */}
         {variant === "home" ? (
-          <div className="mt-9 flex justify-center md:mt-11 lg:mt-12">
-            <Button
-              href="/benefits"
-              theme="foreground"
-              className="min-w-[10.5rem] font-semibold tracking-tight"
-            >
+          <div className="mt-6 flex justify-center md:mt-8 lg:mt-10">
+            <Button href="/benefits" theme="light" className="min-w-[10.5rem]">
               Learn More
             </Button>
           </div>

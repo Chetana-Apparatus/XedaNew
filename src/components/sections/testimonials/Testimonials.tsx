@@ -25,17 +25,11 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="overflow-hidden bg-background py-16  md:py-24"
+      className="overflow-hidden bg-background py-10 md:py-16"
     >
-      <div className="mx-auto mb-10 max-w-4xl px-4 text-center md:mb-16">
-        <span className="inline-flex items-center gap-2 text-xl font-medium tracking-wide text-foreground">
-          <span aria-hidden>•</span>
-          Testimonials
-          <span aria-hidden>•</span>
-        </span>
-
-        <h2 className="mt-4  font-bold tracking-tight text-secondary md:mt-6  md:font-semibold ">
-          What customers say.
+      <div className="mx-auto mb-6 max-w-4xl px-4 text-center md:mb-10">
+        <h2 className="mt-2 max-md:[text-wrap:wrap] tracking-[0.06em] text-primary sm:tracking-[0.12em] md:normal-case md:tracking-normal">
+          What Customers Say.
         </h2>
       </div>
 
@@ -50,7 +44,7 @@ export default function Testimonials() {
           avatar={current.avatar}
         />
 
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="mt-6 flex items-center justify-center gap-4">
           <button
             type="button"
             onClick={goPrev}

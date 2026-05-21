@@ -6,7 +6,7 @@ export const scienceFacts = [
     title: "The Oxygen Boost (ATP)",
 
     paragraphs: [
-      "Did you know that drinking fresh wheatgrass can increase your cellular energy within minutes?",
+      "Did you know that drinking wheatGrass Juice can increase your cellular energy within minutes?",
 
       "Because its chlorophyll aids in oxygen transport, it directly supports the production of ATP (Adenosine Triphosphate) in your mitochondria. This provides a clean, jitter-free energy boost that is more sustainable than caffeine because it fuels your cells at a biological level.",
     ],

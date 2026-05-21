@@ -4,6 +4,8 @@ import { Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { buildContactPayload, submitContactEnquiry } from "@/lib/contacts-api";
+
 import FormField from "../../ui/form/FormField";
 import SelectField from "../../ui/form/SelectField";
 
@@ -59,7 +61,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     }
 
     const fd = new FormData(form);
-    const payload = {
+    const formValues = {
       firstName: String(fd.get("firstName") ?? "").trim(),
       lastName: String(fd.get("lastName") ?? "").trim(),
       email: String(fd.get("email") ?? "").trim(),
@@ -70,38 +72,28 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       pincode: String(fd.get("pincode") ?? "").trim(),
     };
 
-    if (!payload.product || !payload.quantity) {
+    if (!formValues.product || !formValues.quantity) {
       toast.error("Please select product and quantity.");
       return;
     }
 
+    if (!formValues.firstName || !formValues.email) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    const apiPayload = buildContactPayload(formValues);
+
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const result = await submitContactEnquiry(apiPayload);
 
-      const data = (await res.json().catch(() => ({}))) as {
-        error?: string;
-        message?: string;
-      };
-
-      if (!res.ok) {
-        toast.error(
-          typeof data.error === "string"
-            ? data.error
-            : "Something went wrong. Please try again.",
-        );
+      if (!result.ok) {
+        toast.error(result.error);
         return;
       }
 
-      toast.success(
-        typeof data.message === "string"
-          ? data.message
-          : "Submitted successfully.",
-      );
+      toast.success("Submitted successfully. We will contact you soon.");
       form.reset();
       onClose();
     } catch {
@@ -136,7 +128,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         </button>
 
         <div className="mb-6 pr-8 text-center">
-          <h2 className=" font-semibold text-background ">Purchase Enquiry</h2>
+          <h2 className=" font-semibold text-background ">Subscribe</h2>
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
@@ -177,8 +169,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <SelectField label="Product*" name="product" required compact>
               <option value="">Select product</option>
-              <option value="30ml-wheatgrass">30 ml wheatgrass juice</option>
-              <option value="50ml-wheatgrass">50 ml</option>
+              <option value="30ml Wheatgrass Juice">
+                30 ml wheatgrass juice
+              </option>
+              <option value="50ml Wheatgrass Juice">
+                50 ml wheatgrass juice
+              </option>
             </SelectField>
             <SelectField label="Quantity*" name="quantity" required compact>
               <option value="">Qty</option>

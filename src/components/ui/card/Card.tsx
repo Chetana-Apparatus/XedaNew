@@ -69,7 +69,7 @@ export default function TestimonialCard({
           <p
             className={
               isFeatured
-                ? "mt-1 text-sm leading-snug text-neutral-500"
+                ? "mt-1 text-sm leading-snug text-neutral-500 max-md:[text-wrap:wrap]"
                 : "mt-1 text-sm text-[#7a7a7a]"
             }
           >

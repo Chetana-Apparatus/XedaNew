@@ -1,60 +1,113 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect } from "react";
+
+import "img-comparison-slider/dist/styles.css";
+import "img-comparison-slider";
 
 import Button from "@/components/ui/button/Button";
 
+type ComparisonSlider = HTMLElement & { value: number };
+
 export default function GreenBloodSection() {
+  useEffect(() => {
+    let direction = 1;
+    let value = 0;
+    let interval: ReturnType<typeof setInterval> | undefined;
+
+    const slider = document.querySelector(
+      ".greenblood-comparison",
+    ) as ComparisonSlider | null;
+
+    if (slider) {
+      slider.value = 0;
+    }
+
+    const timeout = setTimeout(() => {
+      interval = setInterval(() => {
+        const activeSlider = document.querySelector(
+          ".greenblood-comparison",
+        ) as ComparisonSlider | null;
+
+        if (!activeSlider) return;
+
+        value += direction * 5;
+
+        if (value >= 100) {
+          direction = -1;
+        }
+
+        if (value <= 0) {
+          direction = 1;
+        }
+
+        activeSlider.value = value;
+      }, 50);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
+  }, []);
+
   return (
     <section
       id="greenblood"
-      className="relative scroll-mt-24 overflow-hidden bg-background py-14 text-secondary md:scroll-mt-28 md:py-20 lg:py-24"
+      className="relative scroll-mt-24 bg-background py-12 text-secondary md:scroll-mt-28 md:py-16"
     >
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-8 lg:px-12">
-        <div className="grid items-start gap-16 lg:grid-cols-[0.95fr_1fr]">
-          <div className="relative order-1 lg:order-none">
-            <div className="sticky top-28 overflow-hidden   ">
-              <div className="relative h-[min(420px,70vh)] overflow-hidden md:h-[520px] lg:h-[620px]">
-                <Image
-                  src="/images/GB1.jpg"
-                  alt="Chlorophyll vs Hemoglobin"
-                  fill
-                  className="object-cover"
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 md:px-8 lg:grid lg:grid-cols-2 lg:items-center lg:gap-14 lg:px-12">
+        {/* IMAGE */}
+        <div className="relative order-1 min-w-0 lg:order-none">
+          <div className="relative overflow-hidden rounded-[2rem]">
+            <img-comparison-slider
+              value="0"
+              className="greenblood-comparison block w-full overflow-hidden rounded-[2rem]"
+            >
+              <figure slot="first" className="relative m-0">
+                {/* biome-ignore lint/performance/noImgElement: native img required for img-comparison-slider slots */}
+                <img
+                  src="/images/bb.jpg"
+                  alt="Chlorophyll molecular structure"
+                  className="block h-auto w-full object-contain"
                 />
+              </figure>
 
-                <div className="absolute inset-0 " />
-              </div>
-            </div>
+              <figure slot="second" className="relative m-0">
+                {/* biome-ignore lint/performance/noImgElement: native img required for img-comparison-slider slots */}
+                <img
+                  src="/images/hh.jpg"
+                  alt="Hemoglobin molecular structure"
+                  className="block h-auto w-full object-contain"
+                />
+              </figure>
+            </img-comparison-slider>
+          </div>
+        </div>
+
+        {/* CONTENT */}
+        <div className="order-2 min-w-0 lg:order-none">
+          <h2 className="font-semibold leading-[1.02] tracking-tight text-primary">
+            Did you know that wheatgrass is molecularly almost identical to
+            human blood?
+          </h2>
+
+          <div className="mt-6 border-l border-foreground pl-6">
+            <p className="text-base leading-8 text-primary">
+              The only major difference between a molecule of chlorophyll and
+              hemoglobin is their central atom: chlorophyll contains magnesium,
+              while hemoglobin contains iron. This structural mimicry allows
+              wheatgrass to be absorbed rapidly, helping to build healthy red
+              blood cells and improve oxygenation throughout the body.
+            </p>
           </div>
 
-          {/* RIGHT CONTENT */}
-          <div className="order-2 space-y-14 lg:order-none">
-            <div>
-              <span className="inline-flex items-center gap-2 text-xl font-medium tracking-wide text-foreground md:text-base">
-                <span aria-hidden>•</span>
-                The Science Behind Wheatgrass
-                <span aria-hidden>•</span>
-              </span>
-              <h2 className="mt-6 max-w-3xl font-semibold leading-[1.02] tracking-tight text-secondary">
-                Did you know that wheatgrass is molecularly almost identical to
-                human blood?
-              </h2>
-            </div>
-            <div className="border-l border-foreground pl-6">
-              <p className="mt-6 text-base leading-[2] text-secondary">
-                The only major difference between a molecule of chlorophyll and
-                hemoglobin is their central atom: chlorophyll contains
-                magnesium, while hemoglobin contains iron. This structural
-                mimicry allows wheatgrass to be absorbed rapidly, helping to
-                build healthy red blood cells and improve oxygenation throughout
-                the body.
-              </p>
-            </div>
-            <Button
-              href="/green-blood"
-              theme="foreground"
-              className="rounded-full !px-8 !py-4 text-base font-medium"
-              text="Learn More"
-            />
-          </div>
+          <Button
+            href="/green-blood"
+            theme="foreground"
+            text="Learn More"
+            className="relative z-10 mt-8"
+          />
         </div>
       </div>
     </section>
