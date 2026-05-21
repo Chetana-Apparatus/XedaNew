@@ -1,11 +1,11 @@
 {
-  "name": "project_name",
+  "name": "xedafarm",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -p 6014",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start -p 6014",
     "project:setup": "node scripts/project-setup.mjs",
     "lint": "biome check",
     "format": "biome format --write",

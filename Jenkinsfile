@@ -2,11 +2,12 @@ pipeline {
   agent any
 
   environment {
-    IMAGE_NAME = 'project_name'
-    CONTAINER_NAME = 'project_name'
-    ENV_CREDENTIAL_ID = "project_name_env"
-    HOST_PORT = '3000'
-    CONTAINER_PORT = '3000'
+    IMAGE_NAME = 'xedafarm'
+    CONTAINER_NAME = 'xedafarm'
+    ENV_CREDENTIAL_ID = 'xedafarm_env'
+    HOST_PORT = '6014'
+    CONTAINER_PORT = '6014'
+    NEXT_PUBLIC_CONTACTS_API_URL = 'https://api.xedafarm.com/api/contacts/'
   }
 
   stages {
@@ -17,7 +18,13 @@ pipeline {
 
     stage('Docker Build') {
       steps {
-        sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest ."
+        sh """
+          docker build \
+            --build-arg NEXT_PUBLIC_CONTACTS_API_URL=${NEXT_PUBLIC_CONTACTS_API_URL} \
+            -t ${IMAGE_NAME}:${BUILD_NUMBER} \
+            -t ${IMAGE_NAME}:latest \
+            .
+        """
       }
     }
 
@@ -34,6 +41,7 @@ pipeline {
               --name $NEW_CONTAINER \
               -p ${HOST_PORT}:${CONTAINER_PORT} \
               --env-file "$DOTENV_FILE" \
+              -e PORT=${CONTAINER_PORT} \
               --memory="512m" \
               --cpus="1.0" \
               --log-opt max-size=10m \
@@ -43,7 +51,6 @@ pipeline {
             # Wait for startup
             sleep 10
 
-            # Optional health check (if endpoint exists)
             curl -f http://localhost:${HOST_PORT}/api/health || exit 1
 
             # Replace old container only after success
