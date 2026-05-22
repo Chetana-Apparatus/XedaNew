@@ -32,13 +32,16 @@ pipeline {
       steps {
         withCredentials([file(credentialsId: "${ENV_CREDENTIAL_ID}", variable: 'DOTENV_FILE')]) {
           sh '''
-            # Remove temp container from previous deploys (if any)
-            docker stop xedafarm_temp || true
-            docker rm xedafarm_temp || true
+            # Remove temp container from failed blue-green deploys (if any)
+            docker rm -f xedafarm_temp || true
 
             # Stop and remove existing container to free port 6014
-            docker stop ${CONTAINER_NAME} || true
-            docker rm ${CONTAINER_NAME} || true
+            docker rm -f ${CONTAINER_NAME} || true
+
+            # Remove any other container still holding port 6014
+            for cid in $(docker ps -q --filter "publish=${HOST_PORT}"); do
+              docker rm -f "$cid" || true
+            done
 
             docker run -d \
               --name ${CONTAINER_NAME} \
