@@ -32,13 +32,20 @@ pipeline {
       steps {
         withCredentials([file(credentialsId: "${ENV_CREDENTIAL_ID}", variable: 'DOTENV_FILE')]) {
           sh '''
-            NEW_CONTAINER="${CONTAINER_NAME}_temp"
+            # Remove temp container from failed blue-green deploys (if any)
+            docker rm -f xedafarm_temp || true
 
-            # Start new container first (safe deploy)
-            docker rm -f $NEW_CONTAINER || true
+            # Stop and remove existing container to free port 6014
+            docker rm -f ${CONTAINER_NAME} || true
+
+            # Remove any other container still holding port 6014
+            for cid in $(docker ps -q --filter "publish=${HOST_PORT}"); do
+              docker rm -f "$cid" || true
+            done
 
             docker run -d \
-              --name $NEW_CONTAINER \
+              --name ${CONTAINER_NAME} \
+              --restart unless-stopped \
               -p ${HOST_PORT}:${CONTAINER_PORT} \
               --env-file "$DOTENV_FILE" \
               -e PORT=${CONTAINER_PORT} \
@@ -48,16 +55,8 @@ pipeline {
               --log-opt max-file=3 \
               ${IMAGE_NAME}:latest
 
-            # Wait for startup
             sleep 10
-
             curl -f http://localhost:${HOST_PORT}/api/health || exit 1
-
-            # Replace old container only after success
-            docker stop ${CONTAINER_NAME} || true
-            docker rm ${CONTAINER_NAME} || true
-
-            docker rename $NEW_CONTAINER ${CONTAINER_NAME}
           '''
         }
       }
@@ -72,7 +71,8 @@ pipeline {
 
   post {
     failure {
-      echo 'Deployment failed — old container was not removed.'
+      echo 'Deployment failed — check Jenkins logs and container status on the host.'
     }
   }
 }
+
