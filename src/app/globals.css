@@ -72,7 +72,7 @@ li {
 }
 
 h1 {
-  font-weight: 200;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
   font-size: clamp(2rem, 5vw, 3rem);
@@ -80,7 +80,7 @@ h1 {
 }
 
 h2 {
-  font-weight: 100;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
   font-size: clamp(1.5rem, 5vw, 2.5rem);
@@ -89,7 +89,7 @@ h2 {
 
 p {
   font-size: clamp(0.85rem, 5vw, 1.125rem);
-  font-weight: 100;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
   line-height: 150%;
