@@ -73,13 +73,13 @@ export default function Footer() {
       <section className="relative isolate flex min-h-[420px] items-center overflow-hidden border-b border-white/10 py-20 md:min-h-[480px] md:py-28 lg:py-32">
         <div className="pointer-events-none absolute inset-0">
           <Image
-            src="/images/f.webp"
+            src="/images/footer1.webp"
             alt=""
             fill
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-black/55" aria-hidden />
+          <div className="absolute inset-0 bg-black/30" aria-hidden />
         </div>
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-8 lg:px-12">
           <div className="mx-auto max-w-4xl text-center">
