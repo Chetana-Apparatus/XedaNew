@@ -6,6 +6,7 @@ export type NavItem = {
 
 export const footerQuickLinksColumn1 = [
   { label: "Home", href: "/#home" },
+  { label: "Xeda Shot", href: "/xeda-shot" },
   { label: "About", href: "/#about" },
   { label: "Testimonials", href: "/#testimonials" },
   { label: "Blog", href: "/blogs" },
@@ -32,6 +33,11 @@ export const navItems: NavItem[] = [
     href: "/#home",
     isActive: (pathname, hash) =>
       pathname === "/" && (hash === "" || hash === "#home"),
+  },
+  {
+    label: "Xeda Shot",
+    href: "/xeda-shot",
+    isActive: (pathname) => pathname === "/xeda-shot",
   },
   {
     label: "Green Blood",

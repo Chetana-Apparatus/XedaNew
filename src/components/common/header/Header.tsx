@@ -58,6 +58,7 @@ export default function Header() {
   /** White header bar + dark nav from page load (not scroll). */
   const lightTopPage =
     pathname.startsWith("/blogs") ||
+    pathname === "/xeda-shot" ||
     pathname === "/green-blood" ||
     pathname === "/benefits" ||
     pathname === "/the-science-behind-fresh-wheatgrass";
